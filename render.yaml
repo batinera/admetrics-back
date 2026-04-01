@@ -1,0 +1,30 @@
+# Render Blueprint: Postgres + API Web Service
+# Dashboard: New > Blueprint > connect https://github.com/batinera/admetrics-back
+# When prompted, set FRONTEND_URL to your deployed SPA origin (e.g. https://admetrics-eight.vercel.app)
+
+databases:
+  - name: admetrics-db
+    databaseName: admetrics
+    plan: free
+
+services:
+  - type: web
+    name: admetrics-api
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: admetrics-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ENCRYPTION_KEY
+        generateValue: true
+      - key: FRONTEND_URL
+        sync: false

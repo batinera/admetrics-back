@@ -16,7 +16,10 @@ export const config = {
   metaAppId: process.env.META_APP_ID || "",
   metaAppSecret: process.env.META_APP_SECRET || "",
   metaApiVersion: process.env.META_API_VERSION || "v21.0",
-  publicApiUrl: process.env.PUBLIC_API_URL || "http://localhost:3001",
+  publicApiUrl:
+    process.env.PUBLIC_API_URL ||
+    process.env.RENDER_EXTERNAL_URL ||
+    "http://localhost:3001",
   frontendUrl: process.env.FRONTEND_URL || "http://localhost:5173",
 };
 
