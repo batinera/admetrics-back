@@ -51,6 +51,13 @@ npm start         # produção
 - `src/routes/` — auth, integrations, dashboard
 - `src/db/` — pool, migrações, `schema.sql`
 
+## Publicar no GitHub
+
+```bash
+git remote add origin git@github.com:<utilizador>/admetrics-back.git
+git push -u origin main
+```
+
 ## Licença
 
 MIT (alinhada ao projeto AdMetrics).
