@@ -6,7 +6,28 @@ function sumActions(actions) {
 }
 
 function formatYMD(d) {
+  if (!d || Number.isNaN(d.getTime())) return "";
   return d.toISOString().slice(0, 10);
+}
+
+/** Meta devolve start_time/stop_time como Unix (s) ou string ISO — evita Invalid Date. */
+function parseMetaDateTime(raw) {
+  if (raw == null || raw === "") return null;
+  if (typeof raw === "number" && !Number.isNaN(raw)) {
+    const ms = raw < 1e12 ? raw * 1000 : raw;
+    const d = new Date(ms);
+    return Number.isNaN(d.getTime()) ? null : d;
+  }
+  const s = String(raw).trim();
+  if (!s) return null;
+  const asNum = Number(s);
+  if (!Number.isNaN(asNum) && /^\d+$/.test(s)) {
+    const ms = asNum < 1e12 ? asNum * 1000 : asNum;
+    const d = new Date(ms);
+    return Number.isNaN(d.getTime()) ? null : d;
+  }
+  const d = new Date(s);
+  return Number.isNaN(d.getTime()) ? null : d;
 }
 
 export function resolveDateRange({ periodDays, since, until, dateRange }) {
@@ -252,8 +273,8 @@ export async function fetchDashboard(connection, options = {}) {
       name: c.name,
       status: mapCampaignStatus(c.status),
       objective: c.objective || "",
-      startDate: c.start_time ? formatYMD(new Date(c.start_time * 1000)) : "",
-      endDate: c.stop_time ? formatYMD(new Date(c.stop_time * 1000)) : "",
+      startDate: formatYMD(parseMetaDateTime(c.start_time)),
+      endDate: formatYMD(parseMetaDateTime(c.stop_time)),
       budget: budgetFromCampaign(c),
       totals: {
         results: Math.round(results),
