@@ -29,14 +29,7 @@ function sessionCookieOptions() {
 }
 
 export function setAuthCookie(reply, token) {
-  const opts = sessionCookieOptions();
-  reply.setCookie(COOKIE_NAME, token, {
-    path: opts.path,
-    httpOnly: opts.httpOnly,
-    sameSite: opts.sameSite,
-    secure: opts.secure,
-    maxAge: opts.maxAge,
-  });
+  reply.setCookie(COOKIE_NAME, token, sessionCookieOptions());
 }
 
 export function clearAuthCookie(reply) {
