@@ -73,7 +73,7 @@ export async function integrationRoutes(fastify, _opts) {
       }
       const state = buildMetaOAuthState(request.user.id);
       const url = metaAuthorizeUrl(state);
-      return reply.redirect(302, url);
+      return reply.redirect(url);
     },
   );
 
@@ -89,11 +89,10 @@ export async function integrationRoutes(fastify, _opts) {
       const q = new URLSearchParams({
         error: errorDescription || error || "oauth_failed",
       });
-      return reply.redirect(302, `${redirectBase}?${q}`);
+      return reply.redirect(`${redirectBase}?${q}`);
     }
     if (!code || !state) {
       return reply.redirect(
-        302,
         `${redirectBase}?${new URLSearchParams({ error: "missing_code_or_state" })}`,
       );
     }
@@ -102,7 +101,6 @@ export async function integrationRoutes(fastify, _opts) {
       ({ userId } = parseMetaOAuthState(state));
     } catch {
       return reply.redirect(
-        302,
         `${redirectBase}?${new URLSearchParams({ error: "invalid_state" })}`,
       );
     }
@@ -112,7 +110,7 @@ export async function integrationRoutes(fastify, _opts) {
       const q = new URLSearchParams({
         error: e.message || "meta_not_configured",
       });
-      return reply.redirect(302, `${redirectBase}?${q}`);
+      return reply.redirect(`${redirectBase}?${q}`);
     }
     const redirectUri = metaOAuthRedirectUri();
     let shortTok;
@@ -126,7 +124,7 @@ export async function integrationRoutes(fastify, _opts) {
       const q = new URLSearchParams({
         error: e.message || "token_exchange_failed",
       });
-      return reply.redirect(302, `${redirectBase}?${q}`);
+      return reply.redirect(`${redirectBase}?${q}`);
     }
     let accessToken = shortTok;
     let expiresAt = null;
@@ -153,7 +151,7 @@ export async function integrationRoutes(fastify, _opts) {
     );
     const integrationId = ins.rows[0].id;
     const q = new URLSearchParams({ integration_id: integrationId });
-    return reply.redirect(302, `${redirectBase}?${q}`);
+    return reply.redirect(`${redirectBase}?${q}`);
   });
 
   fastify.get(
