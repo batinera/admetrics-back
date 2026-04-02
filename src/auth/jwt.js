@@ -16,16 +16,30 @@ export function verifySession(token) {
 
 export { COOKIE_NAME };
 
-export function setAuthCookie(reply, token) {
-  reply.setCookie(COOKIE_NAME, token, {
+/** Cross-origin front (ex. Vercel) + API (ex. Render) precisa SameSite=None e Secure. */
+function sessionCookieOptions() {
+  const prod = process.env.NODE_ENV === "production";
+  return {
     path: "/",
     httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    sameSite: prod ? "none" : "lax",
+    secure: prod,
     maxAge: 7 * 24 * 60 * 60,
+  };
+}
+
+export function setAuthCookie(reply, token) {
+  const opts = sessionCookieOptions();
+  reply.setCookie(COOKIE_NAME, token, {
+    path: opts.path,
+    httpOnly: opts.httpOnly,
+    sameSite: opts.sameSite,
+    secure: opts.secure,
+    maxAge: opts.maxAge,
   });
 }
 
 export function clearAuthCookie(reply) {
-  reply.clearCookie(COOKIE_NAME, { path: "/" });
+  const { path, sameSite, secure, httpOnly } = sessionCookieOptions();
+  reply.clearCookie(COOKIE_NAME, { path, sameSite, secure, httpOnly });
 }
