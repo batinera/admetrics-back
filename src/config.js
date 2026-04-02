@@ -15,7 +15,7 @@ export const config = {
   encryptionKeyB64: requireEnv("ENCRYPTION_KEY"),
   metaAppId: process.env.META_APP_ID || "",
   metaAppSecret: process.env.META_APP_SECRET || "",
-  metaApiVersion: process.env.META_API_VERSION || "v21.0",
+  metaApiVersion: process.env.META_API_VERSION || "v25.0",
   publicApiUrl:
     process.env.PUBLIC_API_URL ||
     process.env.RENDER_EXTERNAL_URL ||

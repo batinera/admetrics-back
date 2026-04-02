@@ -30,5 +30,6 @@ export function metaAuthorizeUrl(state) {
   u.searchParams.set("redirect_uri", redirectUri);
   u.searchParams.set("state", state);
   u.searchParams.set("scope", "ads_read");
+  u.searchParams.set("response_type", "code");
   return u.toString();
 }
